@@ -11,38 +11,55 @@ def deal_cards():
     card_two = random.choice(list(CARDS_SCORES))
     dealed_cards.append(CARDS_COLORS[random.randint(0,3)] + card_one)
     dealed_cards.append(CARDS_COLORS[random.randint(0,3)] + card_two)
-
     return dealed_cards
 
-print(deal_cards())
 
+#cards = ['♦J', '♥6']
 
-#print(cards.get('two')[random.randint(0,4)])
-
-def calculate_score(cards): 
-    first_card = CARDS_SCORES.get(cards[0])
-    second_card = CARDS_SCORES.get(cards[1])
+def calculate_score(dealed_cards): 
+    first_card = CARDS_SCORES.get(dealed_cards[0][1])
+    second_card = CARDS_SCORES.get(dealed_cards[1][1])
     sum = first_card + second_card
     if sum == 21:
         return 0  #blackjack
     return sum
 
 
+def get_card(card):  #"♥Q"
+    suit = card[0]
+    value = card[1:]  # 1: for '10'
+    return (
+        ' ___ \n'
+        '|{} |\n'
+        '| {}|\n'
+        '|_{}|\n'
+    ).format(
+        format(value, '<2'),
+        format(suit, '<2'),
+        format(value, '>2')
+    ).splitlines()
 
-# def main():
-#     user_cards = deal_cards()  #['ace','jack']
-#     computer_cards = deal_cards()
-#     print(art.CARDS.get(user_cards[0])[random.randint(0,3)],art.CARDS.get(user_cards[1])[random.randint(0,3)])
-#     # print(art.CARDS.get(user_cards[0])[random.randint(0,3)], end =' ')
-#     # print(art.CARDS.get(user_cards[1])[random.randint(0,3)])
+def display_cards(cards):
+    for lines in zip(*map(get_card, cards)):
+        print(*lines)
 
 
-#     user_sum = calculate_score(user_cards)
-#     computer_sum = calculate_score(computer_cards)
-#     # if user_sum == 0:
-#     #     print("Blackjack. You win")
-#     # elif computer_sum == 0:
-#     #     print("You loose. Dealer have blackjack.")
 
-# if __name__ == "__main__":
-#     main()
+def main():
+    user_cards = deal_cards()  #['♦J', '♥6']
+    computer_cards = deal_cards()
+    hidden_cards = computer_cards[:]
+    hidden_cards[0] = "##"
+    print("\nDEALER HAND:")
+    display_cards(hidden_cards)
+    print("\n\nYOUR HAND:")
+    display_cards(user_cards)
+
+
+    # if user_sum == 0:
+    #     print("Blackjack. You win")
+    # elif computer_sum == 0:
+    #     print("You loose. Dealer have blackjack.")
+
+if __name__ == "__main__":
+    main()
