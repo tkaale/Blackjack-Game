@@ -12,30 +12,30 @@ CARDS_SCORES = {"A": 11, "K": 10, "Q": 10, "J": 10, "10": 10, "9": 9, "8": 8, "7
 CARDS_COLORS = ['♣', '♠', '♦', '♥']
 
 
-def deal_cards():
+def deal_card():
     dealed_card = []
     card = random.choice(list(CARDS_SCORES))
     dealed_card.append(CARDS_COLORS[random.randint(0,3)] + card)
     return dealed_card
 
-
-#cards = ['♦J', '♥6']
+#card = ['♦J']
 
 def calculate_score(dealed_cards): 
-    first_card = CARDS_SCORES.get(dealed_cards[0][1])
-    second_card = CARDS_SCORES.get(dealed_cards[1][1])
-    sum = first_card + second_card
+    sum = 0
+    ace = False
+    for card in dealed_cards:
+        card_sum = CARDS_SCORES.get(card[1])
+        if card_sum == 11:
+            ace = True
+        sum += card_sum
     if sum == 21:
         return 0 #blackjack
     if sum > 21:
-        if first_card == 11:
-            first_card = 1
-        elif second_card == 11:
-            second_card = 1
-    sum = first_card + second_card
+        if ace == True:
+            sum -= 10
     return sum
 
-print(calculate_score(['♠A', '♥A']))
+print(calculate_score(['♠A', '♥Q', "♥Q"]))
 
 
 def get_card(card):  #"♥Q"
@@ -59,8 +59,8 @@ def display_cards(cards):
 
 
 def main():
-    user_cards = deal_cards() + deal_cards()  #['♦J', '♥6']
-    computer_cards = deal_cards() + deal_cards()
+    user_cards = deal_card() + deal_card()  #['♦J', '♥6']
+    computer_cards = deal_card() + deal_card()
     hidden_cards = computer_cards[:]
     hidden_cards[0] = "##"
     print_yellow("\nDEALER HAND:")
@@ -74,5 +74,5 @@ def main():
     # elif computer_sum == 0:
     #     print("You loose. Dealer have blackjack.")
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
