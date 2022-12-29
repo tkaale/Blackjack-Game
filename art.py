@@ -1,4 +1,10 @@
-import random
+
+import os
+os.system("")
+
+def print_red(skk): print("\033[91m{}\033[00m" .format(skk))
+def print_green(skk): print("\033[92m {}\033[00m" .format(skk))
+def print_yellow(skk): print("\033[93m {}\033[00m" .format(skk))
 def start():
     print("""
  _     _            _    _            _    
@@ -11,6 +17,14 @@ def start():
                       |__/     
     """)
 
+def print_win():
+   print_green("\nYou win! Congratulations!")
+
+def print_loose():
+    print_red("\nYou lost this game.")
+
+def print_blackjack():
+    print_red("Dealer had a BLACKJACK.")
 
 
 # hidden_card = """

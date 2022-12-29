@@ -70,45 +70,63 @@ def print_all(hidden_cards, user_cards, user_sum):
     display_cards(hidden_cards)
     print_yellow("\n\nYOUR HAND:")
     display_cards(user_cards)
+    if user_sum == 0:
+        user_sum = 21
     print_green(f"\nYour score: {user_sum}")
 
-
-def check_for_win(user_sum, computer_sum):
-    if user_sum == 0:
-        print_green("BLACKJACK. You win")
-        return 0
-    elif computer_sum == 0:
-        print_red("You loose. Dealer have BLACKJACK.")
-        return 1
-    else: 
-        return 2
+def check_closer_to_blackjack(user_sum, computer_sum):
+    user_sum = 21 - user_sum
+    computer_sum = 21 - computer_sum
+    if user_sum > computer_sum:
+        return False
+    else:
+        return True
 
 
+def draw_another_cards(hidden_cards, user_cards, user_sum, computer_sum):
+     while True:
+        if draw_a_card() == True:
+            user_cards += deal_card()
+            print(user_cards)
+            user_sum = calculate_score(user_cards)
+            print_all(hidden_cards, user_cards, user_sum)
+            if user_sum == 0:
+                art.print_win()
+                break
+            elif user_sum > 21:
+                art.print_loose()
+                if computer_sum == 0:
+                    art.print_blackjack()
+                break
+        elif draw_a_card() == False:
+            if check_closer_to_blackjack() == True:
+                art.print_win()
+                break
+            else:
+                art.print_loose()
+                break
 
 def main():
+    user_cards = deal_card() + deal_card()  #['♦J', '♥6']
+    user_sum = calculate_score(user_cards)
+    computer_cards = deal_card() + deal_card()
+    computer_sum = calculate_score(computer_cards)
+    hidden_cards = computer_cards[:]
+    hidden_cards[0] = "##"
+
     while True:
-        user_cards = deal_card() + deal_card()  #['♦J', '♥6']
-        user_sum = calculate_score(user_cards)
-
-        computer_cards = deal_card() + deal_card()
-        computer_sum = calculate_score(computer_cards)
-        hidden_cards = computer_cards[:]
-        hidden_cards[0] = "##"
-
         print_all(hidden_cards, user_cards, user_sum)
-
-        if check_for_win(user_sum, computer_sum) == 0 or check_for_win(user_sum, computer_sum) == 1:
-            check_for_win()
+        if user_sum == 0:
+            print_green("\nYou win! Congratulations!")
+            break
+        elif user_sum > 21:
+            print_red("\nYou lost this game.")
+            if computer_sum == 0:
+                print_red("Dealer had a BLACKJACK.")
             break
         else:
-            if draw_a_card() == True:
-                user_cards += deal_card()
-                print(user_cards)
-                user_sum = calculate_score(user_cards)
-                print_all(hidden_cards, user_cards, user_sum)
-                if check_for_win(user_sum, computer_sum) == 0 or check_for_win(user_sum, computer_sum) == 1:
-                    check_for_win()
-                    break
+            draw_another_cards(hidden_cards, user_cards, user_sum, computer_sum)
+            break
 
 
 if __name__ == "__main__":
