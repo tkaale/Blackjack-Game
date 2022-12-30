@@ -20,8 +20,9 @@ def start():
 def print_win():
    print_green("\nYou win! Congratulations!")
 
-def print_loose():
+def print_loose(computer_sum):
     print_red("\nYou lost this game.")
+    print_red(f'Dealer have {computer_sum} points.')
 
 def print_blackjack():
     print_red("Dealer had a BLACKJACK.")
