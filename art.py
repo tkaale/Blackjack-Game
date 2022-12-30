@@ -25,7 +25,8 @@ def print_loose(computer_sum):
     print_red(f'Dealer have {computer_sum} points.')
 
 def print_blackjack():
-    print_red("Dealer had a BLACKJACK.")
+    print_red("BLACKJACK")
+
 
 
 # hidden_card = """

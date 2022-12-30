@@ -9,14 +9,11 @@ CARDS_SCORES = {"A": 11, "K": 10, "Q": 10, "J": 10, "10": 10, "9": 9, "8": 8, "7
 
 CARDS_COLORS = ['♣', '♠', '♦', '♥']
 
-
 def deal_card():
     dealed_card = []
     card = random.choice(list(CARDS_SCORES))
     dealed_card.append(CARDS_COLORS[random.randint(0,3)] + card)
     return dealed_card
-
-#card = ['♦J']
 
 def calculate_score(dealed_cards): 
     sum = 0
@@ -32,7 +29,6 @@ def calculate_score(dealed_cards):
         if ace == True:
             sum -= 10
     return sum
-
 
 def get_card(card):  #"♥Q"
     suit = card[0]
@@ -73,29 +69,45 @@ def print_all(hidden_cards, user_cards, user_sum):
     print_green(f"\nYour score: {user_sum}")
 
 def check_closer_to_blackjack(user_sum, computer_sum):
-    user_sum = 21 - user_sum
-    computer_sum = 21 - computer_sum
-    if user_sum > computer_sum:
-        return False
+    user_diffrence = 21 - user_sum
+    computer_diffrence = 21 - computer_sum
+    if user_diffrence > computer_diffrence:
+        art.print_loose(computer_sum)  #computer wins
     else:
-        return True
+        art.print_win()
+        print_green(f'Dealer have {computer_sum} points.')
 
 def dealer_draw(computer_sum):
     if computer_sum < 17:
         return True
     else:
-        print("Dealer don't draw a card.")
+        return False
 
 def print_results(user_sum, computer_sum):
-    if user_sum == 0:
+    if user_sum == 0 or user_sum == 21:
         art.print_win()
+        art.print_blackjack()
         return False
     elif user_sum > 21:
         art.print_loose(computer_sum)
-        if computer_sum == 0:
+        if computer_sum == 0 or computer_sum == 21:
+            print_red('Dealer win this game.')
             art.print_blackjack()
+    elif computer_sum > 21:
+        art.print_win()
         return False
 
+def restart_game():
+    while True:
+        user_answer = input("\n\n---> Do you want to play again? Y/N ").upper()
+        if user_answer == "Y":
+            return True
+        elif user_answer == "N":
+            return False
+        else:
+            print("Wrong answer. Please write Y for yes and N for no.")
+            continue
+    
 
 def main():
     user_cards = deal_card() + deal_card()  #['♦J', '♥6']
@@ -108,7 +120,10 @@ def main():
         util.clear_screen()
         print_all(hidden_cards, user_cards, user_sum)
         if print_results(user_sum, computer_sum) == False:
-            break
+            if restart_game() == True:
+                continue
+            else:
+                break
         else:
             while True:
                 if draw_a_card() == True:
@@ -117,19 +132,28 @@ def main():
                     user_sum = calculate_score(user_cards)
                     print_all(hidden_cards, user_cards, user_sum)
                     if print_results(user_sum, computer_sum) == False:
-                        break
+                        if restart_game() == True:
+                            main()
+                        else:
+                            break
                     if dealer_draw(computer_sum) == True:
+                        input('\nPlease ENTER to go on . . .')
+                        util.clear_screen()
+                        print_green('\nDealer draw a card.')
                         computer_cards += deal_card()
                         computer_sum = calculate_score(computer_cards)
                         hidden_cards = computer_cards[:]
                         hidden_cards[0] = "##"
-                        print(computer_cards)
+                    else:
+                        util.clear_screen()
+                        print_green("\nDealer don't draw a card.")
                     print_all(hidden_cards, user_cards, user_sum)
-                elif draw_a_card() == False:
-                    if print_results(user_sum, computer_sum) == False:
+                else:
+                    check_closer_to_blackjack(user_sum, computer_sum)
+                    if restart_game() == True:
+                        main()
+                    else:
                         break
-            break
-
 
 if __name__ == "__main__":
     main()
