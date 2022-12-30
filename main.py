@@ -93,9 +93,9 @@ def print_results(user_sum, computer_sum):
         if computer_sum == 0 or computer_sum == 21:
             print_red('Dealer win this game.')
             art.print_blackjack()
+        return False
     elif computer_sum > 21:
         art.print_win()
-        return False
 
 def restart_game():
     while True:
@@ -121,9 +121,8 @@ def main():
         print_all(hidden_cards, user_cards, user_sum)
         if print_results(user_sum, computer_sum) == False:
             if restart_game() == True:
-                continue
-            else:
-                break
+                main()
+            break
         else:
             while True:
                 if draw_a_card() == True:
@@ -134,8 +133,7 @@ def main():
                     if print_results(user_sum, computer_sum) == False:
                         if restart_game() == True:
                             main()
-                        else:
-                            break
+                        break
                     if dealer_draw(computer_sum) == True:
                         input('\nPlease ENTER to go on . . .')
                         util.clear_screen()
@@ -152,8 +150,8 @@ def main():
                     check_closer_to_blackjack(user_sum, computer_sum)
                     if restart_game() == True:
                         main()
-                    else:
-                        break
+                    break
+            break
 
 if __name__ == "__main__":
     main()
